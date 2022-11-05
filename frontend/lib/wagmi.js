@@ -34,7 +34,7 @@ export const { chains, provider } = configureChains(
         alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_API_KEY }),
         jsonRpcProvider({
             rpc: (chain) => {
-                if (chain.id !== chain.polygonMumbai.id) return null;
+                if (chain.id !== chain.polygonMumbai) return null;
                 return { http: chain.rpcUrls.default };
             },
         }),
