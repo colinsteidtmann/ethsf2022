@@ -2,8 +2,8 @@
 pragma solidity ^0.8.13;
 import "openzeppelin-contracts/token/ERC721/IERC721.sol";
 
-contract EnglishAuction {
-    event Start();
+contract VickeryAuction {
+    event Start(uint256 endAt);
     event BidEvent(address indexed sender, string encryptedAmount);
     event End(address winner, uint256 amount);
 
@@ -11,6 +11,7 @@ contract EnglishAuction {
     uint256 public nftId;
 
     address payable public seller;
+    // highest bidder+seller set by auction owner at end
     address payable public highestBidder;
     uint256 public highestBid;
     uint256 public endAt;
@@ -28,7 +29,6 @@ contract EnglishAuction {
     constructor(
         address _nft,
         uint256 _nftId,
-        uint256 _startingBid,
         uint256 _feeToPlay
     ) {
         nft = IERC721(_nft);
@@ -38,15 +38,15 @@ contract EnglishAuction {
         feeToPlay = _feeToPlay;
     }
 
-    function start() external {
+    function start(uint256 _duration) external {
         require(!started, "started");
         require(msg.sender == seller, "not seller");
 
         nft.transferFrom(msg.sender, address(this), nftId);
         started = true;
-        endAt = block.timestamp + 7 days;
+        endAt = block.timestamp + _duration;
 
-        emit Start();
+        emit Start(endAt);
     }
 
     function bid(string memory _encryptedAmount, string memory _symmetricKey)
@@ -57,7 +57,6 @@ contract EnglishAuction {
         require(block.timestamp < endAt, "ended");
         require(msg.value > feeToPlay, "value < highest");
 
-        // mintGrantBurn
         // create bid
         Bid memory userBid;
         userBid.encryptedAmount = _encryptedAmount;
@@ -65,6 +64,14 @@ contract EnglishAuction {
         bidders.push(msg.sender);
         bids[msg.sender] = userBid;
         emit BidEvent(msg.sender, _encryptedAmount);
+    }
+
+    function declareWinner(address payable _highestBidder, uint256 _highestBid)
+        public
+        onlySeller
+    {
+        highestBidder = _highestBidder;
+        highestBid = _highestBid;
     }
 
     function withdraw() external payable {
@@ -83,5 +90,13 @@ contract EnglishAuction {
         }
 
         emit End(highestBidder, highestBid);
+    }
+
+    modifier onlySeller() {
+        require(msg.sender == seller, "Not seller");
+        // Underscore is a special character only used inside
+        // a function modifier and it tells Solidity to
+        // execute the rest of the code.
+        _;
     }
 }
