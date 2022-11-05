@@ -1,48 +1,41 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
-
-interface IERC721 {
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint tokenId
-    ) external;
-
-    function transferFrom(
-        address,
-        address,
-        uint
-    ) external;
-}
+import "openzeppelin-contracts/token/ERC721/IERC721.sol";
 
 contract EnglishAuction {
     event Start();
-    event Bid(address indexed sender, uint amount);
-    event Withdraw(address indexed bidder, uint amount);
-    event End(address winner, uint amount);
+    event BidEvent(address indexed sender, string encryptedAmount);
+    event End(address winner, uint256 amount);
 
     IERC721 public nft;
-    uint public nftId;
+    uint256 public nftId;
 
     address payable public seller;
-    uint public endAt;
+    address payable public highestBidder;
+    uint256 public highestBid;
+    uint256 public endAt;
     bool public started;
     bool public ended;
+    uint256 immutable feeToPlay;
 
-    address public highestBidder;
-    uint public highestBid;
-    mapping(address => uint) public bids;
+    struct Bid {
+        string encryptedAmount;
+        string encryptedSymmetricKey;
+    }
+    address[] public bidders;
+    mapping(address => Bid) public bids;
 
     constructor(
         address _nft,
-        uint _nftId,
-        uint _startingBid
+        uint256 _nftId,
+        uint256 _startingBid,
+        uint256 _feeToPlay
     ) {
         nft = IERC721(_nft);
         nftId = _nftId;
 
         seller = payable(msg.sender);
-        highestBid = _startingBid;
+        feeToPlay = _feeToPlay;
     }
 
     function start() external {
@@ -56,33 +49,30 @@ contract EnglishAuction {
         emit Start();
     }
 
-    function bid() external payable {
+    function bid(string memory _encryptedAmount, string memory _symmetricKey)
+        external
+        payable
+    {
         require(started, "not started");
         require(block.timestamp < endAt, "ended");
-        require(msg.value > highestBid, "value < highest");
+        require(msg.value > feeToPlay, "value < highest");
 
-        if (highestBidder != address(0)) {
-            bids[highestBidder] += highestBid;
-        }
-
-        highestBidder = msg.sender;
-        highestBid = msg.value;
-
-        emit Bid(msg.sender, msg.value);
+        // mintGrantBurn
+        // create bid
+        Bid memory userBid;
+        userBid.encryptedAmount = _encryptedAmount;
+        userBid.encryptedSymmetricKey = _symmetricKey;
+        bidders.push(msg.sender);
+        bids[msg.sender] = userBid;
+        emit BidEvent(msg.sender, _encryptedAmount);
     }
 
-    function withdraw() external {
-        uint bal = bids[msg.sender];
-        bids[msg.sender] = 0;
-        payable(msg.sender).transfer(bal);
-
-        emit Withdraw(msg.sender, bal);
-    }
-
-    function end() external {
+    function withdraw() external payable {
         require(started, "not started");
         require(block.timestamp >= endAt, "not ended");
         require(!ended, "ended");
+        require(msg.value >= highestBid, "please pay the highestBid");
+        require(msg.sender == highestBidder, "sender must be highestBidder");
 
         ended = true;
         if (highestBidder != address(0)) {
