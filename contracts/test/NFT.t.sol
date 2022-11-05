@@ -9,14 +9,5 @@ contract NFTTest is Test {
 
     function setUp() public {
         // Deploy NFT contract
-        nft = new NFT("NFT_tutorial", "TUT");
-    }
-
-    function testMintPricePaidFail() public {
-        nft.mintTo(address(1));
-    }
-
-    function testMintPricePaid() public {
-        nft.mintTo{value: 0.08 ether}(address(1));
     }
 }
