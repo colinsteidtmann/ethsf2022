@@ -1,44 +1,35 @@
-import { useContract, useProvider, useSigner } from 'wagmi';
+import { useContractReads } from 'wagmi';
 import { AUCTION_ABI, AUCTION_ADDRESS } from "../../lib/contract.js";
-import { useRouter } from 'next/router';
 import BidForm from '../../components/CreateBid.js';
+import { useState } from 'react';
 
 export default function Auction() {
-    // Provider
-    const provider = useProvider();
-    // Signer
-    const { data: signer, isError, isLoading } = useSigner();
+    const [started, setStarted] = useState(false);
     // Contract 
-    const auction = useContract({
+    const auctionContract = {
         address: AUCTION_ADDRESS,
         abi: AUCTION_ABI,
-        signerOrProvider: signer || provider
-    });
-
-    const router = useRouter();
-    const { tokenID } = router.query;
-
-    async function info() {
-        const started = await auction.started();
-        console.log(started);
-      }
-    
-    info();
-
-    const nft_data = auction.nft()
-    const readResult = useContractRead({
-        address: auction?.address,
-        abi: AUCTION_ABI,
-        functionName: 'fetchNfts',
-        onSuccess: (fetchedNfts) => {
-            getDisplayNfts(fetchedNfts);
+    };
+    const readResult = useContractReads({
+        contracts: [
+            {
+                ...auctionContract,
+                functionName: 'started',
+            }
+        ],
+        onSuccess: (data) => {
+            showData(data);
         }
     });
 
-    if (auction) {
-        return (<p>Hello</p>);
-    }
-    // if (false) {
-    //     return (<BidForm></BidForm>);
-    // }
+    const showData = (data) => {
+        console.log(data);
+    };
+
+    return (
+        <>
+            <p>Hello</p>
+        </>
+    );
+
 }
