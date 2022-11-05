@@ -1,25 +1,46 @@
-import { useContract, useProvider, useSigner } from 'wagmi';
-import { NFT_ABI, NFT_ADDRESS } from "../../lib/contract.js";
-import { useRouter } from 'next/router';
+import { useContract, useProvider, useSigner, useContractReads } from 'wagmi';
+import { AUCTION_ABI, AUCTION_ADDRESS } from "../../lib/contract.js";
+import BidForm from '../../components/CreateBid.js';
+import { useState } from 'react';
 
 export default function Auction() {
-    // Provider
+    const [started, setStarted] = useState(false);
     const provider = useProvider();
-    // Signer
-    const { data: signer, isError, isLoading } = useSigner();
+    const { data: signer } = useSigner();
     // Contract 
-    const contract = useContract({
-        address: NFT_ADDRESS,
-        abi: NFT_ABI,
+    const auctionContract = {
+        address: AUCTION_ADDRESS,
+        abi: AUCTION_ABI,
         signerOrProvider: signer || provider
+    };
+    const contract = useContract({
+        ...auctionContract
+    });
+    const readResult = useContractReads({
+        contracts: [
+            {
+                ...auctionContract,
+                functionName: 'started',
+            }
+        ],
+        onSuccess: (data) => {
+            showData(data);
+        }
     });
 
-    const router = useRouter();
-    const { tokenID } = router.query;
+    const showData = (data) => {
+        console.log(data);
+    };
 
-    return (
-        <>
-            <p>my token id is {tokenID}</p>
-        </>
-    );
+    if (contract) {
+        return (
+            <>
+                <BidForm contract={contract} />
+            </>
+        );
+    } else {
+        return (<div>Loading ...</div>);
+    }
+
+
 }
