@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 import "openzeppelin-contracts/token/ERC721/IERC721.sol";
+import "usingtellor/UsingTellor.sol";
 
-contract VickeryAuction {
+contract Auction {
     event Start(uint256 endAt);
     event BidEvent(address indexed sender, string encryptedAmount);
     event End(address winner, uint256 amount);
@@ -11,7 +12,6 @@ contract VickeryAuction {
     uint256 public nftId;
 
     address payable public seller;
-    // highest bidder+seller set by auction owner at end
     address payable public highestBidder;
     uint256 public highestBid;
     uint256 public endAt;
