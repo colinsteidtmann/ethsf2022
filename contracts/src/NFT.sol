@@ -20,12 +20,14 @@ contract NFT is ERC721URIStorage, ReentrancyGuard {
         string name;
         string imageUrl;
         string description;
+        uint256 tokenID;
     }
 
     function getTokenURI(
         string memory name,
         string memory imageUrl,
-        string memory description
+        string memory description,
+        uint256 tokenID
     ) private pure returns (string memory) {
         bytes memory dataURI = abi.encodePacked(
             "{",
@@ -37,6 +39,9 @@ contract NFT is ERC721URIStorage, ReentrancyGuard {
             '",',
             '"description": "',
             description,
+            '"',
+            '"tokenID:": "',
+            tokenID,
             '"',
             "}"
         );
@@ -57,8 +62,16 @@ contract NFT is ERC721URIStorage, ReentrancyGuard {
         _tokenIds.increment();
         uint256 newNftTokenId = _tokenIds.current();
         _safeMint(msg.sender, newNftTokenId);
-        _setTokenURI(newNftTokenId, getTokenURI(name, imageUrl, description));
-        tokenIdToNft[newNftTokenId] = nft(name, imageUrl, description);
+        _setTokenURI(
+            newNftTokenId,
+            getTokenURI(name, imageUrl, description, newNftTokenId)
+        );
+        tokenIdToNft[newNftTokenId] = nft(
+            name,
+            imageUrl,
+            description,
+            newNftTokenId
+        );
     }
 
     function fetchNfts() public view returns (nft[] memory) {

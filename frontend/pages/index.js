@@ -2,7 +2,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { NFT_ABI, NFT_ADDRESS } from "../lib/contract.js";
 import { useContract, useProvider, useSigner } from 'wagmi';
 import MintNFTForm from '../components/MintNFTForm.js';
-import Link from 'next/link';
+import DisplayNFTs from '../components/DisplayNFTS.js';
 
 
 export default function Home() {
@@ -38,7 +38,8 @@ export default function Home() {
           <h3 class="text-6xl leading-tight mb-4 pb-4 text-center">VickVick.</h3>
           <MintNFTForm contract={contract} />
           <br></br>
-          <h2 className="font-small leading-tight text-2xl col-span-2 text-center"><Link href="/gallery">See current auctions</Link></h2>
+          <h2 className="font-small leading-tight text-2xl col-span-2 text-center">See current auctions</h2>
+          <DisplayNFTs contract={contract} />
           <h4 class="my-5 font-medium leading-tight text-xl text-center">Contract Address - <a className="underline text-blue-600 hover:text-blue-700 transition duration-300 ease-in-out mb-4" target="_blank" rel="noreferrer" href={`https://testnet.snowtrace.io/address/${NFT_ADDRESS}`}>{NFT_ADDRESS}</a></h4>
           <a className="text-center" target="_blank" rel="noreferrer" href="https://github.com/colinsteidtmann/calhacks/tree/main/contracts"><img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" className="w-10 h-10" /></a>
         </div>
