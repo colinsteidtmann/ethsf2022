@@ -1,30 +1,27 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
 
 // Form to Mint NFT w/encrypted description
-export default function MintNFTForm({ contract }) {
+export default function BidForm({ contract }) {
 
     const [form, setForm] = useState({
-        name: "",
-        imageUrl: "",
-        description: "",
+        bidAmount: ""
     });
 
     // Form Submit Handler
-    async function onMint() {
-        const { name, imageUrl, description } = form;
-        console.log("name, imageUrl, description" + name, imageUrl, description);
-        await contract.mintNft(name, imageUrl, description);
-
-        setForm({ name: "", imageUrl: "", description: "" });
+    async function onBid() {
+        const { bidAmount } = form;
+        console.log("amount" + bidAmount);
+        const { encryptedBid, encryptedSymmetricKey } = await lit.encryptText(bidAmount);
+        await contract.bid(encryptedBid, encryptedSymmetricKey);
+        setForm({bidAmount});
     }
-
-    const inputs = [{ label: "Name", input: "name" }, { label: "Image URL", input: "imageUrl" }, { label: "Description", input: "description" }];
 
     return (
         <>
             <div className="flex justify-center">
                 <div className="block p-6 rounded-lg shadow-lg bg-white max-w-sm">
-                    <h5 className="text-gray-900 text-xl leading-tight font-medium mb-2">Mint NFT and Start your Auction</h5>
+                    <h5 className="text-gray-900 text-xl leading-tight font-medium mb-2">Bid</h5>
                     <br></br>
                     {inputs.map(({ label, input }) =>
                         <div key={label} class="form-group mb-3">

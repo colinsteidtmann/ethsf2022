@@ -1,6 +1,7 @@
 import { useContract, useProvider, useSigner } from 'wagmi';
-import { NFT_ABI, NFT_ADDRESS } from "../../lib/contract.js";
+import { AUCTION_ABI, AUCTION_ADDRESS } from "../../lib/contract.js";
 import { useRouter } from 'next/router';
+import BidForm from '../../components/CreateBid.js';
 
 export default function Auction() {
     // Provider
@@ -8,18 +9,36 @@ export default function Auction() {
     // Signer
     const { data: signer, isError, isLoading } = useSigner();
     // Contract 
-    const contract = useContract({
-        address: NFT_ADDRESS,
-        abi: NFT_ABI,
+    const auction = useContract({
+        address: AUCTION_ADDRESS,
+        abi: AUCTION_ABI,
         signerOrProvider: signer || provider
     });
 
     const router = useRouter();
     const { tokenID } = router.query;
 
-    return (
-        <>
-            <p>my token id is {tokenID}</p>
-        </>
-    );
+    async function info() {
+        const started = await auction.started();
+        console.log(started);
+      }
+    
+    info();
+
+    const nft_data = auction.nft()
+    const readResult = useContractRead({
+        address: auction?.address,
+        abi: AUCTION_ABI,
+        functionName: 'fetchNfts',
+        onSuccess: (fetchedNfts) => {
+            getDisplayNfts(fetchedNfts);
+        }
+    });
+
+    if (auction) {
+        return (<p>Hello</p>);
+    }
+    // if (false) {
+    //     return (<BidForm></BidForm>);
+    // }
 }
