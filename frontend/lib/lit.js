@@ -2,7 +2,7 @@ import LitJsSdk from "@lit-protocol/sdk-browser";
 const client = new LitJsSdk.LitNodeClient();
 
 // Checks if the user has at least 0.1 Network Token (i.e. 0.1 Avax)
-const chain = "fuji";
+const chain = "polygon";
 const accessControlConditions = [
     {
         contractAddress: "",
