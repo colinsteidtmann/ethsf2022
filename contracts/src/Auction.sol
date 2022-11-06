@@ -1,12 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 import "openzeppelin-contracts/token/ERC721/IERC721.sol";
-import "usingtellor/UsingTellor.sol";
+import "EPNS.sol";
+
+// PUSH Comm Contract Interface
+interface IPUSHCommInterface {
+    function sendNotification(address _channel, address _recipient, bytes calldata _identity) external;
+}
 
 contract Auction {
     event Start(uint256 endAt);
     event BidEvent(address indexed sender, string encryptedAmount);
     event End(address winner, uint256 amount);
+
+    address public EPNS_COMM_ADDRESS = 0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa;
 
     IERC721 public nft;
     uint256 public nftId;
@@ -63,6 +70,7 @@ contract Auction {
         userBid.encryptedSymmetricKey = _symmetricKey;
         bidders.push(msg.sender);
         bids[msg.sender] = userBid;
+
         emit BidEvent(msg.sender, _encryptedAmount);
     }
 
@@ -72,6 +80,29 @@ contract Auction {
     {
         highestBidder = _highestBidder;
         highestBid = _highestBid;
+
+        IPUSHCommInterface(EPNS_COMM_ADDRESS).sendNotification(
+            0x4b1b619d4FF6AfE77307299b9970d9056B06C37A, // from channel - recommended to set channel via dApp and put it's value -> then once contract is deployed, go back and add the contract address as delegate for your channel
+            address(this), // to recipient, put address(this) in case you want Broadcast or Subset. For Targetted put the address to which you want to send
+            bytes(
+                string(
+                    // We are passing identity here: https://docs.epns.io/developers/developer-guides/sending-notifications/advanced/notification-payload-types/identity/payload-identity-implementations
+                    abi.encodePacked(
+                        "0", // this is notification identity: https://docs.epns.io/developers/developer-guides/sending-notifications/advanced/notification-payload-types/identity/payload-identity-implementations
+                        "+", // segregator
+                        "3", // this is payload type: https://docs.epns.io/developers/developer-guides/sending-notifications/advanced/notification-payload-types/payload (1, 3 or 4) = (Broadcast, targetted or subset)
+                        "+", // segregator
+                        "Winner Alert for Auction ", Strings.toString(nftId), // this is notificaiton title
+                        "+", // segregator
+                        "Hooray! ", // notification body
+                        addressToString(msg.sender), // notification body
+                        " declared the winner! Congratulations ", // notification body
+                        addressToString(highestBidder), // notification body
+                        ". You won the auction!" // notification body
+                    )
+                )
+            )
+        );
     }
 
     function withdraw() external payable {
@@ -100,3 +131,4 @@ contract Auction {
         _;
     }
 }
+
