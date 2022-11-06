@@ -1,5 +1,6 @@
 import { useState } from "react";
 import lit from "../lib/lit";
+import { utils } from "ethers";
 
 // Form to Mint NFT w/encrypted description
 export default function BidForm({ contract }) {
@@ -10,7 +11,8 @@ export default function BidForm({ contract }) {
     async function onBid() {
         console.log("amount" + bidAmount);
         const { encryptedString, encryptedSymmetricKey } = await lit.encryptText(bidAmount);
-        await contract.bid(encryptedString, encryptedSymmetricKey);
+        const options = { value: utils.parseEther("0.001") };
+        await contract.bid(encryptedString, encryptedSymmetricKey, options);
         setbidAmount("");
     }
     console.log(contract);

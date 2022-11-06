@@ -1252,169 +1252,6 @@
         }
       }
     },
-    "lib/usingtellor/contracts/UsingTellor.sol": {
-      "lastModificationDate": 1667671352346,
-      "contentHash": "8532507fdff3d5cde4da079d34eef9ae",
-      "sourceName": "lib/usingtellor/contracts/UsingTellor.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [
-        "lib/usingtellor/contracts/interface/IERC2362.sol",
-        "lib/usingtellor/contracts/interface/IMappingContract.sol",
-        "lib/usingtellor/contracts/interface/ITellor.sol"
-      ],
-      "versionRequirement": ">=0.8.0",
-      "artifacts": {
-        "UsingTellor": {
-          "0.8.17+commit.8df45f5f.Windows.msvc": "UsingTellor.sol\\UsingTellor.json"
-        }
-      }
-    },
-    "lib/usingtellor/contracts/interface/IERC2362.sol": {
-      "lastModificationDate": 1667671352346,
-      "contentHash": "d6755e77bcbefca19210c4972c0f4a32",
-      "sourceName": "lib/usingtellor/contracts/interface/IERC2362.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [],
-      "versionRequirement": ">=0.8.0",
-      "artifacts": {
-        "IERC2362": {
-          "0.8.17+commit.8df45f5f.Windows.msvc": "IERC2362.sol\\IERC2362.json"
-        }
-      }
-    },
-    "lib/usingtellor/contracts/interface/IMappingContract.sol": {
-      "lastModificationDate": 1667671352346,
-      "contentHash": "7d152676fc98e1df44e78c5b445e9526",
-      "sourceName": "lib/usingtellor/contracts/interface/IMappingContract.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [],
-      "versionRequirement": "^0.8.0",
-      "artifacts": {
-        "IMappingContract": {
-          "0.8.17+commit.8df45f5f.Windows.msvc": "IMappingContract.sol\\IMappingContract.json"
-        }
-      }
-    },
-    "lib/usingtellor/contracts/interface/ITellor.sol": {
-      "lastModificationDate": 1667671352346,
-      "contentHash": "8a2db702fd5bf84ed2234351290c0d26",
-      "sourceName": "lib/usingtellor/contracts/interface/ITellor.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [],
-      "versionRequirement": ">=0.8.0",
-      "artifacts": {
-        "Autopay": {
-          "0.8.17+commit.8df45f5f.Windows.msvc": "ITellor.sol\\Autopay.json"
-        },
-        "ITellor": {
-          "0.8.17+commit.8df45f5f.Windows.msvc": "ITellor.sol\\ITellor.json"
-        }
-      }
-    },
     "script/Counter.s.sol": {
       "lastModificationDate": 1667612898714,
       "contentHash": "0705c52104730a78aef4aa6694175c81",
@@ -1470,8 +1307,8 @@
       }
     },
     "src/Auction.sol": {
-      "lastModificationDate": 1667673006263,
-      "contentHash": "c232de6c5cb990d77b1ad1ed46a9f8d9",
+      "lastModificationDate": 1667698784617,
+      "contentHash": "036d6582d52e7d1127f24e707c3f9744",
       "sourceName": "src/Auction.sol",
       "solcConfig": {
         "settings": {
@@ -1502,16 +1339,17 @@
       },
       "imports": [
         "lib/openzeppelin-contracts/contracts\\token/ERC721/IERC721.sol",
+        "lib/openzeppelin-contracts/contracts\\utils/Strings.sol",
         "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol",
-        "lib/usingtellor/contracts\\UsingTellor.sol",
-        "lib/usingtellor/contracts/interface/IERC2362.sol",
-        "lib/usingtellor/contracts/interface/IMappingContract.sol",
-        "lib/usingtellor/contracts/interface/ITellor.sol"
+        "lib/openzeppelin-contracts/contracts/utils/math/Math.sol"
       ],
       "versionRequirement": "^0.8.13",
       "artifacts": {
         "Auction": {
           "0.8.17+commit.8df45f5f.Windows.msvc": "Auction.sol\\Auction.json"
+        },
+        "IPUSHCommInterface": {
+          "0.8.17+commit.8df45f5f.Windows.msvc": "Auction.sol\\IPUSHCommInterface.json"
         }
       }
     },
@@ -1668,10 +1506,6 @@
         "lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol",
         "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol",
         "lib/openzeppelin-contracts/contracts/utils/math/Math.sol",
-        "lib/usingtellor/contracts\\UsingTellor.sol",
-        "lib/usingtellor/contracts/interface/IERC2362.sol",
-        "lib/usingtellor/contracts/interface/IMappingContract.sol",
-        "lib/usingtellor/contracts/interface/ITellor.sol",
         "src\\Auction.sol",
         "src\\Counter.sol",
         "src\\NFT.sol"

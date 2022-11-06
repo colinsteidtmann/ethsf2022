@@ -1,5 +1,5 @@
 import { useContract, useProvider, useSigner, useContractReads } from 'wagmi';
-import { AUCTION_ABI, AUCTION_ADDRESS } from "../../lib/contract.js";
+import { AUCTION_ABI, AUCTION_ADDRESS, NFT_ABI, NFT_ADDRESS } from "../../lib/contract.js";
 import BidForm from '../../components/BidForm.js';
 import Header from '../../components/Header.js';
 import { useState } from 'react';
@@ -18,6 +18,12 @@ export default function Auction() {
     const contract = useContract({
         ...auctionContract
     });
+    const nftContract = useContract({
+        address: NFT_ADDRESS,
+        abi: NFT_ABI,
+        signerOrProvider: signer || provider
+    });
+
     const readResult = useContractReads({
         contracts: [
             {
@@ -39,7 +45,7 @@ export default function Auction() {
     // }
     // info();
     if (!auctionData.started && contract) {
-        return <StartAuction contract={contract} />;
+        return <StartAuction nftContract={nftContract} contract={contract} />;
     }
     else if (auctionData.started) {
         return (

@@ -1,3 +1,0 @@
-[submodule "contracts/lib/usingtellor"]
-	path = contracts/lib/usingtellor
-	url = https://github.com/tellor-io/usingtellor
