@@ -21,10 +21,7 @@ export default function Home() {
   async function info() {
     const symbol = await contract.symbol();
     const nfts = await contract.fetchNfts();
-    console.log(symbol);
-    console.log(nfts);
   }
-
   info();
 
 

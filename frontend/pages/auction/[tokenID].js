@@ -31,7 +31,6 @@ export default function Auction() {
     const showData = (data) => {
         console.log(data);
     };
-
     if (contract) {
         return (
             <>
