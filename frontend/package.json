@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@lit-protocol/sdk-browser": "^1.1.234",
     "@rainbow-me/rainbowkit": "^0.7.4",
     "eslint": "8.26.0",
     "eslint-config-next": "13.0.2",
