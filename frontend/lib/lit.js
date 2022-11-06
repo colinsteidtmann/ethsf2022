@@ -1,18 +1,20 @@
 import LitJsSdk from "@lit-protocol/sdk-browser";
+import { AUCTION_ABI, AUCTION_ADDRESS } from "./contract";
 const client = new LitJsSdk.LitNodeClient();
 
-// Checks if the user has at least 0.1 Network Token (i.e. 0.1 Avax)
-const chain = "polygon";
-const accessControlConditions = [
+// Checks if the auction has ended
+const chain = "mumbai";
+const evmContractConditions = [
     {
-        contractAddress: "",
-        standardContractType: "",
+        contractAddress: AUCTION_ADDRESS,
+        functionName: "endAt",
+        functionParams: [],
+        functionAbi: AUCTION_ABI,
         chain,
-        method: "eth_getBalance",
-        parameters: [":userAddress", "latest"],
         returnValueTest: {
-            comparator: ">=",
-            value: "100000000000000000", // 0.1 AVAX
+            key: "",
+            comparator: "<=",
+            value: Math.floor(new Date().getTime() / 1000)
         },
     },
 ];
@@ -36,30 +38,31 @@ class Lit {
         // Prove web3 user owns their crypto address
         const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain });
 
-        const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(text);
+        // const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(text);
 
-        const encryptedSymmetricKey = await this.litNodeClient.saveEncryptionKey({
-            accessControlConditions,
-            symmetricKey,
-            authSig,
-            chain,
-        });
+        // const encryptedSymmetricKey = await this.litNodeClient.saveEncryptionKey({
+        //     evmContractConditions,
+        //     symmetricKey,
+        //     authSig,
+        //     chain,
+        // });
 
-        // Convert blob to base64 to pass as a string to Solidity
-        const blobToBase64 = (blob) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(blob);
-            return new Promise(resolve => {
-                reader.onloadend = () => {
-                    resolve(reader.result);
-                };
-            });
-        };
+        // // Convert blob to base64 to pass as a string to Solidity
+        // const blobToBase64 = (blob) => {
+        //     const reader = new FileReader();
+        //     reader.readAsDataURL(blob);
+        //     return new Promise(resolve => {
+        //         reader.onloadend = () => {
+        //             resolve(reader.result);
+        //         };
+        //     });
+        // };
 
-        return {
-            encryptedString: await blobToBase64(encryptedString),
-            encryptedSymmetricKey: LitJsSdk.uint8arrayToString(encryptedSymmetricKey, "base16")
-        };
+        // return {
+        //     encryptedString: await blobToBase64(encryptedString),
+        //     encryptedSymmetricKey: LitJsSdk.uint8arrayToString(encryptedSymmetricKey, "base16")
+        // };
+        return { encryptedString: "3", encryptedSymmetricKey: "ads" };
     }
 
     // Decrypt encrypted string. Returns decrypted string
@@ -71,7 +74,7 @@ class Lit {
         const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain });
 
         const symmetricKey = await this.litNodeClient.getEncryptionKey({
-            accessControlConditions,
+            evmContractConditions,
             toDecrypt: encryptedSymmetricKey,
             chain,
             authSig

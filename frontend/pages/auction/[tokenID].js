@@ -1,12 +1,12 @@
 import { useContract, useProvider, useSigner, useContractReads } from 'wagmi';
 import { AUCTION_ABI, AUCTION_ADDRESS } from "../../lib/contract.js";
-import BidForm from '../../components/CreateBid.js';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import BidForm from '../../components/BidForm.js';
+import Header from '../../components/Header.js';
 import { useState } from 'react';
-import NFT from "../../components/NFT";
+import StartAuction from '../../components/StartAuction.js';
 
 export default function Auction() {
-    const [started, setStarted] = useState(false);
+    const [auctionData, setAuctionData] = useState({});
     const provider = useProvider();
     const { data: signer } = useSigner();
     // Contract 
@@ -26,25 +26,33 @@ export default function Auction() {
             }
         ],
         onSuccess: (data) => {
-            showData(data);
+            setStateData(data);
         }
     });
-
-    const showData = (data) => {
+    const setStateData = (data) => {
         console.log(data);
+        let [started] = data;
+        setAuctionData({ "started": started });
     };
-
-
-    return (
-        <>
-            <div className="p-8">
-                <div className="flex flex-row-reverse mb-5">
-                    <ConnectButton />
+    // async function info() {
+    //     console.log("auctionContract", contract);
+    // }
+    // info();
+    if (!auctionData.started && contract) {
+        return <StartAuction contract={contract} />;
+    }
+    else if (auctionData.started) {
+        return (
+            <>
+                <div className="p-8">
+                    <Header />
+                    <BidForm contract={contract}></BidForm>
                 </div>
-                <BidForm data={auctionContract}></BidForm>
+            </>
+        );
+    } else {
+        return (<div>Loading ...</div>);
+    }
 
-            </div>
-        </>
-    );
 
 }
